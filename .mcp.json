@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "mamba-legal-entity-resolver": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mambalabsdev/mcp-legal-entity-resolver"
+      ],
+      "env": {
+        "APIFY_TOKEN": "your-apify-token"
+      }
+    }
+  }
+}
