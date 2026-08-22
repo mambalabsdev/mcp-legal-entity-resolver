@@ -38,7 +38,7 @@ Company domain in, the registered legal entity behind it out.
 | --- | --- | --- | --- |
 | `domain` | string | yes | A single company domain, for example monzo.com. Protocol and path are stripped. |
 | `legal_name_hint` | string | no | Skips the domain lookup and goes straight to the registers with this name. Use it when you already have the legal name and just want the register record. |
-| `jurisdiction_hint` | string | no | ISO-2 country code, for example GB or US. Narrows which registers are queried and cuts latency. Leave empty to query every register. |
+| `jurisdiction_hint` | string | no | ISO-2 country code. `GB`/`UK` asks Companies House, `US` asks SEC EDGAR, `FR` asks the French Sirene register (SIREN), `NO` asks the Norwegian Brreg register (organisasjonsnummer). Each asks GLEIF alongside. Any other code asks GLEIF alone. Leave empty to query all five. |
 | `match_strictness` | enum | no | `exact` accepts a register record only when the normalized legal names are equal. `fuzzy` returns the best scoring candidate with a confidence below 100 and a warning in `rejected_candidates`. Default `exact`. |
 | `validate_vat` | boolean | no | Runs any VAT number found on the company's own pages through the EU VIES service and returns the name VIES holds for it, as a cross-check against the register name. Default `true`. |
 | `skipCache` | enum | no | `false` uses the cache, 90 days for a resolved company and 7 days for a null. `true` forces a fresh look. Default `false`. |
