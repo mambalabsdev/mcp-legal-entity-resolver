@@ -53,9 +53,14 @@ Three registers are queried: UK Companies House, GLEIF and SEC EDGAR.
 
 ## Billing
 
-You are charged per domain resolved, plus a small actor start fee. Cached results are 90 days for a resolved company and 7 days for a null.
+You are charged per domain resolved, plus the platform's actor start event. Prices from the live pricing record, read 2026-10-05:
 
-Pricing is on the [actor's Apify page](https://apify.com/mambalabs/legal-entity-resolver). Running this server consumes Apify credits.
+| Event | Price per event (USD) | Fires when |
+| --- | --- | --- |
+| `domain-resolved` | $0.007 on the Free plan, down to $0.00595 on higher Apify plans | One domain looked up: the company's own pages fetched and read for a legal name, then up to three company registers queried for an exact match. Charged whether or not a register matches, because the work is the same either way and charging only for matches would push this Actor toward guessing. Not charged when the domain cannot be reached at all. |
+| `apify-actor-start` | $0.00005 | Charged when the Actor starts running. Number of events charged depends on Actor memory (one event per GB, minimum one event). |
+
+Cached results are 90 days for a resolved company and 7 days for a null. The [actor's Apify page](https://apify.com/mambalabs/legal-entity-resolver) carries the current prices. Running this server consumes Apify credits.
 
 ## What this server does and does not do
 
@@ -64,6 +69,10 @@ It is a thin client for the Apify actor. It passes your input through and return
 This is not a company database and not a credit or risk product. It does not score companies, rate them, or tell you whether to trade with them. It answers one question: which registered legal entity sits behind this domain.
 
 Errors are surfaced, never swallowed. An invalid input, an invalid token, an exhausted balance, a timeout, or a run that returns anything other than a dataset all come back as an explicit tool error rather than as an empty result.
+
+## How each call runs
+
+Each call starts the actor run, polls it until it finishes, then reads the dataset. The run is allowed 300 seconds, as before. If the run is still going when this call stops waiting, the call returns the run id and a console link instead of a timeout, so the result is never lost.
 
 ## Source
 
