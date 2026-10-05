@@ -72,7 +72,7 @@ Errors are surfaced, never swallowed. An invalid input, an invalid token, an exh
 
 ## How each call runs
 
-Each call starts the actor run, polls it until it finishes, then reads the dataset. The run is allowed 300 seconds, as before. If the run is still going when this call stops waiting, the call returns the run id and a console link instead of a timeout, so the result is never lost.
+Each call starts the actor run, polls it until it finishes, then reads the dataset. The run is allowed 1,800 seconds. If the run is still going when this call stops waiting, the call returns the run id and a console link instead of a timeout, so the result is never lost.
 
 ## Source
 
