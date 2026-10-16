@@ -12,9 +12,9 @@ const pkg = JSON.parse(readFileSync(join(repo, "package.json"), "utf8"));
 const TOOL_NAME = "resolve_legal_entity";
 const ACTOR_ID = "KHFyPCDIx7CyqULYm";
 // Every input the live actor marks required must be required in the tool schema.
-const ACTOR_REQUIRED = ["domain"];
+const ACTOR_REQUIRED = ["domain", "sec_requester_email", "sec_requester_name"];
 // Every input the live actor exposes must be exposed by the tool.
-const ACTOR_INPUTS = ["domain", "jurisdiction_hint", "legal_name_hint", "match_strictness", "skipCache", "validate_vat", "max_charge_usd"];
+const ACTOR_INPUTS = ["domain", "jurisdiction_hint", "legal_name_hint", "match_strictness", "skipCache", "validate_vat", "max_charge_usd", "sec_requester_name", "sec_requester_email"];
 
 // Speak MCP over stdio to the built server and return the tools/list result.
 // No APIFY_TOKEN is set, on purpose: a client must see capabilities before it
