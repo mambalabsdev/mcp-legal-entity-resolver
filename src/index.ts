@@ -6,6 +6,16 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
+// Optional per call spending cap, passed through to the actor's own max_charge_usd
+// input. The actor enforces it; this wrapper only forwards it when set.
+const MAX_CHARGE_USD = z
+  .number()
+  .min(0)
+  .optional()
+  .describe(
+    "Optional spending cap for this call, in USD, passed to the actor as max_charge_usd. The run stops before any charge that would take it past this amount and keeps every row already charged. Leave empty to rely only on the maximum charge per run set on your Apify account.",
+  );
+
 const here = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(
   readFileSync(join(here, "..", "package.json"), "utf8"),
@@ -212,7 +222,7 @@ server.registerTool(
       "Give it a company domain and it returns the registered legal entity behind it: legal name, company number, jurisdiction, status, entity type, LEI and VAT number, as one flat row with a full audit trail of what was rejected and why. Three registers are queried: UK Companies House, GLEIF and SEC EDGAR. Register search endpoints are fuzzy and always return something, so by default a record is accepted only when the normalized legal names are identical. That is why roughly 6 domains in 10 resolve rather than 10 in 10, and why a null here is a trustworthy answer rather than a gap. Read match_method, match_confidence and rejected_candidates before acting on a match. Setting match_strictness to fuzzy will hand you a confidently wrong company on most domains and should be treated as a research mode, not a default. This is not a company database and not a credit or risk product. Requires an APIFY_TOKEN and consumes Apify credits. Read only.",
     annotations: {
       title: "Resolve Legal Entity",
-      readOnlyHint: true,
+      readOnlyHint: false,
       destructiveHint: false,
       idempotentHint: true,
       openWorldHint: true,
@@ -224,6 +234,7 @@ server.registerTool(
     match_strictness: z.enum(["exact", "fuzzy"]).optional().describe("exact accepts a register record only when the normalized legal names are equal, which is the default and the recommendation. fuzzy returns the best scoring candidate with a confidence below 100 and a warning in rejected_candidates. Register search is fuzzy and always returns something, so fuzzy mode will hand you a confidently wrong company on most domains. Default: \"exact\"."),
     validate_vat: z.boolean().optional().describe("Runs any VAT number found on the company's own pages through the EU VIES service and returns the name VIES holds for it, as a cross-check against the register name. Default: true."),
     skipCache: z.enum(["false", "true"]).optional().describe("false uses the cache: 90 days for a resolved company, 7 days for a null. true forces a fresh look. Default: \"false\"."),
+      max_charge_usd: MAX_CHARGE_USD,
     },
   },
   async (args) =>
