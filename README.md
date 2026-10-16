@@ -42,6 +42,7 @@ Company domain in, the registered legal entity behind it out.
 | `match_strictness` | enum | no | `exact` accepts a register record only when the normalized legal names are equal. `fuzzy` returns the best scoring candidate with a confidence below 100 and a warning in `rejected_candidates`. Default `exact`. |
 | `validate_vat` | boolean | no | Runs any VAT number found on the company's own pages through the EU VIES service and returns the name VIES holds for it, as a cross-check against the register name. Default `true`. |
 | `skipCache` | enum | no | `false` uses the cache, 90 days for a resolved company and 7 days for a null. `true` forces a fresh look. Default `false`. |
+| `max_charge_usd` | number | no | Optional spending cap for this call, in USD. The actor stops before any charge that would take the run past this amount and keeps every row already charged. |
 
 ## A null is the product, not a gap
 
