@@ -36,6 +36,8 @@ Company domain in, the registered legal entity behind it out.
 
 | Input | Type | Required | Notes |
 | --- | --- | --- | --- |
+| `sec_requester_name` | string | yes | Your own name or your company's name, sent to the SEC. |
+| `sec_requester_email` | string | yes | Your own working email, sent to the SEC with your name. |
 | `domain` | string | yes | A single company domain, for example monzo.com. Protocol and path are stripped. |
 | `legal_name_hint` | string | no | Skips the domain lookup and goes straight to the registers with this name. Use it when you already have the legal name and just want the register record. |
 | `jurisdiction_hint` | string | no | ISO-2 country code. `GB`/`UK` asks Companies House, `US` asks SEC EDGAR, `FR` asks the French Sirene register (SIREN), `NO` asks the Norwegian Brreg register (organisasjonsnummer). Each asks GLEIF alongside. Any other code asks GLEIF alone. Leave empty to query all five. |
@@ -51,6 +53,8 @@ Register search endpoints are fuzzy and they always return something. Taking the
 Read `match_method`, `match_confidence` and `rejected_candidates` before acting on a match. `fuzzy` strictness is a research mode: it will hand you a confidently wrong company on most domains.
 
 Three registers are queried: UK Companies House, GLEIF and SEC EDGAR.
+
+**Why the SEC fields are required.** The SEC requires every automated request to EDGAR to identify the requester by name and email, as a User-Agent of the form `Name email@domain.tld` ([SEC: Accessing EDGAR data](https://www.sec.gov/os/accessing-edgar-data)). The actor sends your `sec_requester_name` and `sec_requester_email` and never a default or shared identity. A call without both fails before any request, naming the two fields.
 
 ## Billing
 

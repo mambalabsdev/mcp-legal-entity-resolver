@@ -228,6 +228,8 @@ server.registerTool(
       openWorldHint: true,
     },
     inputSchema: {
+    sec_requester_name: z.string().min(1).max(100).describe("Required. Your own name or your company's name. The SEC requires every automated request to EDGAR to identify the requester by name and email, and the actor sends yours, never a default."),
+    sec_requester_email: z.string().email().describe("Required. Your own working email address. Sent to the SEC with your name in the User-Agent of each EDGAR request, in the form the SEC asks for. Nothing else uses it."),
     domain: z.string().describe("A single company domain, for example monzo.com. Protocol and path are stripped."),
     legal_name_hint: z.string().optional().describe("Skips the domain lookup and goes straight to the registers with this name. Use it when you already have the legal name and just want the register record."),
     jurisdiction_hint: z.string().optional().describe("ISO-2 country code. GB or UK asks Companies House and GLEIF and returns a Companies House number. US asks GLEIF and SEC EDGAR. FR asks the French Sirene register and returns a SIREN. NO asks the Norwegian Brreg register and returns an organisasjonsnummer. Any other code asks GLEIF alone rather than guessing at a register with no adapter. Leave empty to query all five. Narrowing cuts latency, and registers_queried on the row records which were actually asked, so a null is never ambiguous."),
